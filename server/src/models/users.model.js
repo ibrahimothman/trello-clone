@@ -6,11 +6,11 @@ module.exports = function (app) {
   const modelName = 'users';
   const mongooseClient = app.get('mongooseClient');
   const schema = new mongooseClient.Schema({
-  
-    username: { 
-      type: String, 
-      unique: true,
-      lowercase: true 
+
+    email: {
+      type: String,
+      required: true,
+      lowercase: true
     },
     password: {
       type: String,
@@ -24,11 +24,11 @@ module.exports = function (app) {
       type: String,
       required: true
     },
- 
+
     googleId: { type: String },
-  
+
     facebookId: { type: String },
-  
+
   }, {
     timestamps: true
   });

@@ -1,3 +1,4 @@
-import { makeAuthPlugin } from '../feathers-client'
+/* eslint linebreak-style: ["error", "windows"] */
+import { makeAuthPlugin } from '../feathers-client';
 
-export default makeAuthPlugin({ userService: 'users' })
+export default makeAuthPlugin({ userService: 'users' });

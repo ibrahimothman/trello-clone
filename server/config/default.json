@@ -3,13 +3,13 @@
   "port": 3030,
   "public": "../public/",
   "paginate": {
-    "default": 100,
+    "default": 10,
     "max": 50
   },
   "authentication": {
     "entity": "user",
     "service": "users",
-    "secret": "CELiDoYmt1vR5+aQJCbCeuJHPDw=",
+    "secret": "G0dzCLfNrImo/mocWpw06MTcujo=",
     "authStrategies": [
       "jwt",
       "local"
@@ -18,30 +18,14 @@
       "header": {
         "typ": "access"
       },
-      "audience": "https://trello.clone",
-      "issuer": "ibra",
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
       "algorithm": "HS256",
       "expiresIn": "1d"
     },
     "local": {
-      "usernameField": "username",
+      "usernameField": "email",
       "passwordField": "password"
-    },
-    "oauth": {
-      "redirect": "/",
-      "google": {
-        "key": "<google oauth key>",
-        "secret": "<google oauth secret>",
-        "scope": [
-          "email",
-          "profile",
-          "openid"
-        ]
-      },
-      "facebook": {
-        "key": "<facebook oauth key>",
-        "secret": "<facebook oauth secret>"
-      }
     }
   },
   "mongodb": "mongodb://localhost:27017/trello_clone"
