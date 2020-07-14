@@ -18,7 +18,7 @@
                   <h2> {{ board.name }} </h2>
                 </v-flex>
                 <v-flex v-for="list in lists" :key="list._id" sm3  pa-2>
-                  <single-list :listId="list._id" :listName="list.name"/>
+                  <single-list :list="list"/>
                 </v-flex>
                 <new-list-form :createList="createList"/>
               </v-layout>
@@ -44,12 +44,11 @@ export default {
   async created() {
     const board = await this.getBoard(this.$route.params.id);
     console.log(board);
-    const lists = await this.findLists({
+    await this.findLists({
       query: {
         boardId: this.$route.params.id,
       },
     });
-    console.log(lists.data);
   },
   computed: {
     ...mapState('boards', { isBoardLoding: 'isGetPending' }),
