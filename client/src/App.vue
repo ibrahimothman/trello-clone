@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <navbar :user="payload"/>
+    <navbar :user="user"/>
     <v-main>
       <router-view/>
     </v-main>
@@ -20,7 +20,7 @@ export default {
     Navbar,
   },
   computed: {
-    ...mapState('auth', ['payload']),
+    ...mapState('auth', { user: 'payload' }),
   },
 
 };

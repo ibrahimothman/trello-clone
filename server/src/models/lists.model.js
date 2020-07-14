@@ -1,34 +1,31 @@
-// users-model.js - A mongoose model
+// lists-model.js - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
-  const modelName = 'users';
+  const modelName = 'lists';
   const mongooseClient = app.get('mongooseClient');
-  const schema = new mongooseClient.Schema({
-
-    email: {
-      type: String,
-      required: true,
-      lowercase: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    displayName: {
-      type: String,
-      required: true
-    },
-    imageUrl: {
+  const { Schema } = mongooseClient;
+  const schema = new Schema({
+    name: {
       type: String,
       required: true
     },
 
-    googleId: { type: String },
+    order: {
+      type: Number,
+      default: 0
+    },
 
-    facebookId: { type: String },
+    boardId: {
+      type: Schema.Types.ObjectId,
+      ref: 'boards',
+    },
+
+    archived: {
+      type: Boolean,
+      dafault: false
+    }
 
   }, {
     timestamps: true

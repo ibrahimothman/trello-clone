@@ -9,20 +9,6 @@
           indeterminate
           color="primary">
         </v-progress-circular>
-        <v-flex sm3 v-for="board in boards" :key="board._id" pa-2>
-          <v-card>
-            <v-img
-              height="200px"
-              :src="board.background"
-            ></v-img>
-            <v-card-title primary-title>
-              <div class="headline">{{board.name}}</div>
-            </v-card-title>
-            <v-card-actions>
-              <v-btn color="primary" :to="{'name':'board','params':{'id': board._id }}">more</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
         <v-flex sm3 pa-2>
           <v-card>
             <v-card-title primary-title style="flex-direction: column;">
@@ -58,6 +44,21 @@
             </v-card-title>
           </v-card>
         </v-flex>
+        <v-flex sm3 v-for="board in boards" :key="board._id" pa-2>
+          <v-card>
+            <v-img
+              height="200px"
+              :src="board.background"
+            ></v-img>
+            <v-card-title primary-title>
+              <div class="headline">{{board.name}}</div>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn color="primary" :to="{'name':'board','params':{'id': board._id }}">more</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -78,8 +79,8 @@ export default {
       notEmptyRules: [(v) => !!v || 'Required.'],
     },
   }),
-  created() {
-    this.findBoards({ query: {} });
+  async created() {
+    await this.findBoards({ query: {} });
   },
   computed: {
     ...mapState('boards', { loading: 'isFindPending' }),

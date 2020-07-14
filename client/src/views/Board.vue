@@ -1,97 +1,81 @@
 <template>
-  <pre>
-    {{ board }}
-  </pre>
-  <!-- <v-container fluid>
-    <v-slide-y-transition mode="out-in">
-      <v-layout row align-center wrap>
-        <v-progress-circular
-          v-if="loading"
-          :size="70"
-          :width="7"
-          indeterminate
-          color="primary">
-        </v-progress-circular>
-        <v-flex sm3 v-for="board in boards" :key="board._id" pa-2>
-          <v-card>
-            <v-img
-              height="200px"
-              :src="board.background"
-            ></v-img>
-            <v-card-title primary-title>
-              <div class="headline">{{board.name}}</div>
-            </v-card-title>
-          </v-card>
+  <v-container fluid>
+      <v-layout>
+        <v-flex xs10>
+          <v-layout row wrap>
+            <v-flex xs12>
+            </v-flex>
+            <v-progress-circular
+              v-if="isBoardLoding"
+              :size="70"
+              :width="7"
+              indeterminate
+              color="primary">
+            </v-progress-circular>
+            <v-flex xs12 v-if="!isBoardLoding" pa-5>
+              <v-layout row wrap>
+                <v-flex xs12>
+                  <h2> {{ board.name }} </h2>
+                </v-flex>
+                <v-flex v-for="list in lists" :key="list._id" sm3  pa-2>
+                  <single-list :list="list"/>
+                </v-flex>
+                <new-list-form :createList="createList"/>
+              </v-layout>
+            </v-flex>
+          </v-layout>
         </v-flex>
-        <v-flex sm3 pa-2>
-          <v-card>
-            <v-card-title primary-title style="flex-direction: column;">
-              <div class="headline">Create Board</div>
-              <div>
-                <v-form
-                  v-if="!creating"
-                  v-model="valid"
-                  @submit.prevent="createBoard"
-                  @keydown.prevent.enter>
-                  <v-text-field
-                    v-model="board.name"
-                    :rules="rules.notEmptyRules"
-                    label="Name"
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="board.background"
-                    :rules="rules.notEmptyRules"
-                    label="Background"
-                    required
-                  ></v-text-field>
-                  <v-btn type="submit" :disabled="!valid">Create</v-btn>
-                </v-form>
-                <v-progress-circular
-                  v-if="creating"
-                  :size="70"
-                  :width="7"
-                  indeterminate
-                  color="primary">
-                </v-progress-circular>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex>
+
       </v-layout>
-    </v-slide-y-transition>
-  </v-container> -->
+  </v-container>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import SingleList from '../components/SingleList.vue';
+import NewListForm from '../components/NewListForm.vue';
 
 export default {
   name: 'board',
-  // data: () => ({
-  //   // valid: false,
-  //   board: {
-  //     name: '',
-  //     background: '',
-  //   },
-  //   rules: {
-  //     notEmptyRules: [(v) => !!v || 'Required.'],
-  //   },
-  // }),
+  components: {
+    SingleList,
+    NewListForm,
+  },
   async created() {
-    console.log(this.$route.params);
-    await this.getBoard([this.$route.params.id]);
+    const board = await this.getBoard(this.$route.params.id);
+    console.log(board);
+    await this.findLists({
+      query: {
+        boardId: this.$route.params.id,
+      },
+    });
   },
   computed: {
-    ...mapState('boards', { loading: 'isGetPending' }),
+    ...mapState('boards', { isBoardLoding: 'isGetPending' }),
     ...mapGetters('boards', { getBoardInStore: 'get' }),
+    ...mapState('lists', { isListsLoding: 'isFindPending' }),
+    ...mapGetters('lists', { findListsInStore: 'find' }),
     board() {
-      return this.getBoardInStore([this.$route.params.id]);
+      return this.getBoardInStore(this.$route.params.id);
+    },
+    lists() {
+      return this.findListsInStore({
+        query: {
+          boardId: this.$route.params.id,
+        },
+      }).data;
     },
 
   },
   methods: {
     ...mapActions('boards', { getBoard: 'get' }),
+    ...mapActions('lists', { findLists: 'find' }),
+    async createList(list) {
+      const { List } = this.$FeathersVuex.api;
+      const newList = new List(list);
+      newList.boardId = this.$route.params.id;
+      await newList.save();
+    },
   },
 
 };

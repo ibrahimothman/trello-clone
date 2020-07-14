@@ -19,6 +19,9 @@ const servicePlugins = requireModule
   .map((modulePath) => requireModule(modulePath).default);
 
 export default new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
   plugins: [
     ...servicePlugins,
     auth,

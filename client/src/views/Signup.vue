@@ -81,6 +81,7 @@ export default {
   methods: {
     async signUp() {
       if (this.valid) {
+        console.log(this.user);
         const { User } = this.$FeathersVuex.api;
         const user = new User(this.user);
         await user.save();
