@@ -60,11 +60,11 @@ export default {
     async login() {
       if (this.valid) {
         try {
-          const res = await this.authenticate({
+          await this.authenticate({
             strategy: 'local',
             ...this.user,
           });
-          console.log(res);
+          this.$router.push('/boards');
         } catch (error) {
           console.error(error);
         }
