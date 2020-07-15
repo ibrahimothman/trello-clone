@@ -1,5 +1,7 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
+const restrictToBoardOwner = require('../../hooks/restrict-to-board-owner');
+
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],

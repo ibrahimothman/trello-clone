@@ -30,7 +30,10 @@ module.exports = function (app) {
       type: Schema.Types.ObjectId,
       ref: 'lists'
     },
-
+    boardId: {
+      type: Schema.Types.ObjectId,
+      ref: 'boards'
+    },
     members:[{
       type: Schema.Types.ObjectId,
       ref: 'users'
