@@ -13,7 +13,6 @@
               v-model="card.title"
               :rules="rules.required"
               label="Title"
-              required
             ></v-text-field>
             <v-btn type="submit" :disabled="!valid">Create Card</v-btn>
           </v-form>

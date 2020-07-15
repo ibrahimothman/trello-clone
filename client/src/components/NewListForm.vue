@@ -45,7 +45,6 @@ export default {
     async onCreateList() {
       if (this.valid) {
         await this.createList(this.list);
-        console.log('list created successfully');
         this.list = {
           name: '',
         };

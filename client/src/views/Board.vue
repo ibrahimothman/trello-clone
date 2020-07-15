@@ -18,7 +18,13 @@
                   <h2> {{ board.name }} </h2>
                 </v-flex>
                 <v-flex v-for="list in lists" :key="list._id" sm3  pa-2>
-                  <single-list :listId="list._id" :listName="list.name"/>
+                  <single-list
+                    :setDroppingList="onSetDroppingList"
+                    :droppingList="droppingList"
+                    :setDraggingCard="onSetDraggingCard"
+                    :dropCard="dropCard"
+                    :listId="list._id"
+                    :listName="list.name"/>
                 </v-flex>
                 <new-list-form :createList="createList"/>
               </v-layout>
@@ -41,15 +47,17 @@ export default {
     SingleList,
     NewListForm,
   },
+  data: () => ({
+    droppingList: null,
+    draggingCard: null,
+  }),
   async created() {
-    const board = await this.getBoard(this.$route.params.id);
-    console.log(board);
-    const lists = await this.findLists({
+    await this.getBoard(this.$route.params.id);
+    this.findLists({
       query: {
         boardId: this.$route.params.id,
       },
     });
-    console.log(lists.data);
   },
   computed: {
     ...mapState('boards', { isBoardLoding: 'isGetPending' }),
@@ -76,6 +84,22 @@ export default {
       const newList = new List(list);
       newList.boardId = this.$route.params.id;
       await newList.save();
+    },
+    onSetDroppingList(event, listId) {
+      if (listId) {
+        event.preventDefault();
+        this.droppingList = listId;
+      }
+    },
+    onSetDraggingCard(card) {
+      this.draggingCard = card;
+    },
+    async dropCard() {
+      console.log(this.draggingCard);
+      this.draggingCard.listId = this.droppingList;
+      await this.draggingCard.update();
+      this.draggingCard = null;
+      this.droppingList = null;
     },
   },
 
