@@ -1,16 +1,20 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const { setField } = require('feathers-authentication-hooks');
 
-const restrictToBoardOwner = require('../../hooks/restrict-to-board-owner');
+const appendUserId = setField({
+  from: 'params.user._id',
+  as: 'data.userId'
+});
 
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [restrictToBoardOwner()],
-    update: [restrictToBoardOwner()],
-    patch: [restrictToBoardOwner()],
-    remove: [restrictToBoardOwner()]
+    create: [appendUserId],
+    update: [],
+    patch: [],
+    remove: []
   },
 
   after: {

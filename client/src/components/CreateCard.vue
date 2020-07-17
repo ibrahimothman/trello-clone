@@ -6,7 +6,7 @@
         <div>
           <v-form
             v-model="valid"
-            @submit.prevent="createCard"
+            @submit.prevent="onCreateCard"
             @keydown.prevent.enter
           >
             <v-text-field
@@ -32,7 +32,7 @@
 <script>
 export default {
   name: 'create-card',
-  props: ['listId'],
+  props: ['createCard'],
   data: () => ({
     valid: false,
     card: {
@@ -43,14 +43,11 @@ export default {
     },
   }),
   methods: {
-    async createCard() {
+    async onCreateCard() {
       if (this.valid) {
-        const { Card } = this.$FeathersVuex.api;
-        const card = new Card(this.card);
-        card.listId = this.listId;
-        await card.save();
+        await this.createCard(this.card);
         this.card = {
-          name: '',
+          title: '',
         };
       }
     },

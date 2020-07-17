@@ -1,12 +1,15 @@
 <template>
   <v-card
-    @dragover="setDroppingList($event, listId)"
-    :class="{'green lighten-4': listId === droppingList}"
+    @dragover="setDroppingList($event, list)"
+    :class="{
+      'green lighten-4':
+      droppingList && list._id.toString() === droppingList._id.toString()
+    }"
   >
     <v-card-title primary-title>
       <v-layout column>
         <v-flex xs12>
-          <div class="headline">{{listName}}</div>
+          <div class="headline">{{list.name}}</div>
         </v-flex>
          <v-flex xs12
           v-for="card in cards"
@@ -30,12 +33,13 @@
       </v-layout>
     </v-card-title>
     <v-card-actions>
-      <create-card :listId="listId"></create-card>
+      <create-card :createCard="createCard"></create-card>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+/* eslint no-underscore-dangle: 0 */
 import { mapActions, mapGetters } from 'vuex';
 import CreateCard from './CreateCard.vue';
 
@@ -45,17 +49,17 @@ export default {
     CreateCard,
   },
   props: [
-    'listId',
-    'listName',
+    'list',
     'setDroppingList',
     'droppingList',
     'setDraggingCard',
     'dropCard',
+    'cardCreated',
   ],
   created() {
     this.findCards({
       query: {
-        listId: this.listId,
+        listId: this.list._id,
       },
     });
   },
@@ -64,13 +68,21 @@ export default {
     cards() {
       return this.findCardsInStore({
         query: {
-          listId: this.listId,
+          listId: this.list._id,
         },
       }).data;
     },
   },
   methods: {
     ...mapActions('cards', { findCards: 'find' }),
+    async createCard(card) {
+      const { Card } = this.$FeathersVuex.api;
+      const newCard = new Card(card);
+      newCard.boardId = this.$route.params.id;
+      newCard.listId = this.list._id;
+      await newCard.save();
+      await this.cardCreated(card, this.list);
+    },
   },
 
 };
